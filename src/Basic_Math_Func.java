@@ -1,5 +1,8 @@
 public class Basic_Math_Func {
 
+
+    // Basic Int and Float for all 4 main forms (addition subtraction, multiplication, division)
+
     public int basic_int_addition(int a, int b){
         return a + b;
     }
@@ -32,5 +35,9 @@ public class Basic_Math_Func {
         return a / b;
     }
 
+    // Extra methods for mathematics like Square roots, sqareing a number, or even cubing. made for Int and Float.
 
+    public int basic_int_square_root(int a){
+        return (int) Math.sqrt(a);
+    }
 }
