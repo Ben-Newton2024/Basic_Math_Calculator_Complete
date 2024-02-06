@@ -13,10 +13,12 @@ public class Calc_Interface {
         // read console input line
         String input_equation = in.nextLine();
 
-        // TODO - basic checks to ensure math syntax is correct, no random + or operators at the end of the equations
+        /*
+         TODO - basic checks to ensure math syntax is correct, no random + or operators at the end of the equations
+         sort the string into separate components of operators and digits
+        */
 
 
-        // sort the string into separate components of operators and digits
         List<String> equation_list = equation_sorting(input_equation);
 
         // now complete the math onto this list above
