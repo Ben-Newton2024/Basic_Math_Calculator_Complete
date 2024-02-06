@@ -5,8 +5,14 @@ public class Main {
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.
         System.out.println("main");
-        Basic_Math_Func e = new Basic_Math_Func();
 
-        System.out.println(e.basic_int_addition(1, 2));
+        Calc_Interface calc_interface = new Calc_Interface();
+        Basic_Math_Func basic_math_func = new Basic_Math_Func();
+
+        System.out.println(basic_math_func.basic_int_addition(1, 2));
+
+        System.out.println("attempting to run class ");
+        calc_interface.main_calc_interface();
+        System.out.println("completed main calc interface");
     }
 }
