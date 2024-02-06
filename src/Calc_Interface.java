@@ -169,7 +169,7 @@ public class Calc_Interface {
             equation_list.add(String.valueOf((input_equation.charAt(input_equation.length()-1))));
         }
         System.out.println(equation_list);
-        // at the end of this method there should just be a list with all digits and operators appened to it in the
+        // at the end of this method there should just be a list with all digits and operators append to it in the
         // correct order as needed to complete basic maths
 
         return equation_list;
