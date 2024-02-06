@@ -10,6 +10,15 @@ public class Calc_Interface {
         // read console input line
         String input_equation = in.nextLine();
 
+
+        // sort the string into separate components of operators and digits
+        List<String> equation_list = equation_sorting(input_equation);
+
+        // now complete the math onto this list above
+
+    }
+
+    public List<String> equation_sorting(String input_equation){
         // need to check to see if the inputed equation has the correct syntax, e.g, not end in a + or -, make sure there
         // are enough ( to match the amount of )
 
@@ -49,5 +58,7 @@ public class Calc_Interface {
         System.out.println(equation_list);
         // at the end of this method there should just be a list with all digits and operators appened to it in the
         // correct order as needed to complete basic maths
+
+        return equation_list;
     }
 }
