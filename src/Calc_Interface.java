@@ -25,11 +25,10 @@ public class Calc_Interface {
         for (int i = 0; i <= equation_list.size() - 1; i++) {
             loop_tracker ++;
 
-            int digit = 0;
             try {
                 // tries to convert item in position "i" to a integer, if it cannot then it must be an operator, as such
                 // the catch it caught and pushed through to the needed code to complete the maths equation
-                digit = Integer.parseInt(equation_list.get(i));
+                Integer.parseInt(equation_list.get(i));
 
                 // if current item in list position can be converted to a digit, nothing is really needed to happen, as
                 // such rest of code happens in catch.
