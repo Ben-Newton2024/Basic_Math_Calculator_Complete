@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Calc_Interface {
 
-    public void main_calc_interface(){
+    public void main_calc_interface() {
 
         Basic_Math_Func Basic_Math_Functions = new Basic_Math_Func();
 
@@ -19,22 +19,27 @@ public class Calc_Interface {
 
         // now complete the math onto this list above
 
-        for (int i = 0; i <= equation_list.size()-1; i++){
+        // loop tracking number
+        int loop_tracker = 0;
 
+        for (int i = 0; i <= equation_list.size() - 1; i++) {
+            loop_tracker ++;
 
-
-
-
-            if( !Character.isDigit(Integer.parseInt(equation_list.get(i)))){
+            int digit = 0;
+            try {
+                // tries to convert item in position "i" to a integer, if it cannot then it must be an operator, as such
+                // the catch it caught and piushed through to the needed code to complete the maths equation
+                digit = Integer.parseInt(equation_list.get(i));
+            } catch (NumberFormatException ex) {
                 // if the item in position "i" is found to not be a digit when made into a integer, then it must be an
                 // operator.
                 // if it is an operator then we can take the digits from either side of it and use the operator to do
                 // what math needs to be done on it then
 
-                if (Objects.equals(equation_list.get(i), "+")){
+                if (Objects.equals(equation_list.get(i), "+")) {
                     // add the digits from either side of the equations list together.
-                    int a = Integer.parseInt(equation_list.get(i-1));
-                    int b = Integer.parseInt(equation_list.get(i+1));
+                    int a = Integer.parseInt(equation_list.get(i - 1));
+                    int b = Integer.parseInt(equation_list.get(i + 1));
                     int c = Basic_Math_Functions.basic_int_addition(a, b);
 
                     // answer c is found and can be added to the list, this can be done by removing the current operator
@@ -44,7 +49,7 @@ public class Calc_Interface {
                     equation_list.set(i, String.valueOf(c));
 
                     // now removing the digits on either side of that "operator" now answer digit
-                    equation_list.remove(i-1);
+                    equation_list.remove(i - 1);
                     //removed position before i, therefore list is now 1 position smaller
                     equation_list.remove(i);
 
@@ -53,10 +58,41 @@ public class Calc_Interface {
                     i = 0;
                 }
             }
-
-
+            System.out.println(equation_list + " Loop: #" + i);
         }
+        System.out.println(equation_list + " Answer");
     }
+
+            //if( !Character.isDigit(digit)){
+            //    // if the item in position "i" is found to not be a digit when made into a integer, then it must be an
+            //    // operator.
+            //    // if it is an operator then we can take the digits from either side of it and use the operator to do
+            //    // what math needs to be done on it then
+//
+            //    if (Objects.equals(equation_list.get(i), "+")){
+            //        // add the digits from either side of the equations list together.
+            //        int a = Integer.parseInt(equation_list.get(i-1));
+            //        int b = Integer.parseInt(equation_list.get(i+1));
+            //        int c = Basic_Math_Functions.basic_int_addition(a, b);
+//
+            //        // answer c is found and can be added to the list, this can be done by removing the current operator
+            //        // and the two digits on either side of it, shortening the list.
+//
+            //        // replacing the operator with the answer
+            //        equation_list.set(i, String.valueOf(c));
+//
+            //        // now removing the digits on either side of that "operator" now answer digit
+            //        equation_list.remove(i-1);
+                    //removed position before i, therefore list is now 1 position smaller
+            //        equation_list.remove(i);
+//
+            //        //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
+            //        // list correctly with no blank positions or reset positions that duplicate.
+            //        i = 0;
+            //    }
+            //}
+//        }
+//    }
 
     public List<String> equation_sorting(String input_equation){
         // need to check to see if the inputted equation has the correct syntax, e.g, not end in a + or -, make sure there
