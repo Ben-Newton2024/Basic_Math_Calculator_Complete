@@ -28,8 +28,16 @@ public class Calc_Interface {
             int digit = 0;
             try {
                 // tries to convert item in position "i" to a integer, if it cannot then it must be an operator, as such
-                // the catch it caught and piushed through to the needed code to complete the maths equation
+                // the catch it caught and pushed through to the needed code to complete the maths equation
                 digit = Integer.parseInt(equation_list.get(i));
+
+                // if current item in list position can be converted to a digit, nothing is really needed to happen, as
+                // such rest of code happens in catch.
+                // it is probably better to ensure all code happens in the try, rather than the catch, however -
+                // im working getting it to work before fixing syntax and "perfect" coding currently.
+
+                // could cal on system garbage collector to clean up on digit be referencing it as null, but no point as
+                // it is already well optimised and will probably catch it later on anyway
             } catch (NumberFormatException ex) {
                 // if the item in position "i" is found to not be a digit when made into a integer, then it must be an
                 // operator.
@@ -56,9 +64,69 @@ public class Calc_Interface {
                     //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
                     // list correctly with no blank positions or reset positions that duplicate.
                     i = 0;
+                } else if (Objects.equals(equation_list.get(i), "-")) {
+                    // add the digits from either side of the equations list together.
+                    int a = Integer.parseInt(equation_list.get(i - 1));
+                    int b = Integer.parseInt(equation_list.get(i + 1));
+                    int c = Basic_Math_Functions.basic_int_subtraction(a, b);
+
+                    // answer c is found and can be added to the list, this can be done by removing the current operator
+                    // and the two digits on either side of it, shortening the list.
+
+                    // replacing the operator with the answer
+                    equation_list.set(i, String.valueOf(c));
+
+                    // now removing the digits on either side of that "operator" now answer digit
+                    equation_list.remove(i - 1);
+                    //removed position before i, therefore list is now 1 position smaller
+                    equation_list.remove(i);
+
+                    //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
+                    // list correctly with no blank positions or reset positions that duplicate.
+                    i = 0;
+                } else if (Objects.equals(equation_list.get(i), "*")) {
+                    // add the digits from either side of the equations list together.
+                    int a = Integer.parseInt(equation_list.get(i - 1));
+                    int b = Integer.parseInt(equation_list.get(i + 1));
+                    int c = Basic_Math_Functions.basic_int_multiplication(a, b);
+
+                    // answer c is found and can be added to the list, this can be done by removing the current operator
+                    // and the two digits on either side of it, shortening the list.
+
+                    // replacing the operator with the answer
+                    equation_list.set(i, String.valueOf(c));
+
+                    // now removing the digits on either side of that "operator" now answer digit
+                    equation_list.remove(i - 1);
+                    //removed position before i, therefore list is now 1 position smaller
+                    equation_list.remove(i);
+
+                    //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
+                    // list correctly with no blank positions or reset positions that duplicate.
+                    i = 0;
+                }else if (Objects.equals(equation_list.get(i), "/")) {
+                    // add the digits from either side of the equations list together.
+                    int a = Integer.parseInt(equation_list.get(i - 1));
+                    int b = Integer.parseInt(equation_list.get(i + 1));
+                    int c = Basic_Math_Functions.basic_int_division(a, b);
+
+                    // answer c is found and can be added to the list, this can be done by removing the current operator
+                    // and the two digits on either side of it, shortening the list.
+
+                    // replacing the operator with the answer
+                    equation_list.set(i, String.valueOf(c));
+
+                    // now removing the digits on either side of that "operator" now answer digit
+                    equation_list.remove(i - 1);
+                    //removed position before i, therefore list is now 1 position smaller
+                    equation_list.remove(i);
+
+                    //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
+                    // list correctly with no blank positions or reset positions that duplicate.
+                    i = 0;
                 }
             }
-            System.out.println(equation_list + " Loop: #" + i);
+            System.out.println(equation_list + " Loop: #" + loop_tracker);
         }
         System.out.println(equation_list + " Answer");
     }
