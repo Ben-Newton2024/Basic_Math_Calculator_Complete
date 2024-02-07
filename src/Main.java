@@ -8,7 +8,6 @@ public class Main {
         System.out.println("This program will run once, relaunch to replay again. no loop included yet.");
 
         Calc_Interface calc_interface = new Calc_Interface();
-        Basic_Math_Func basic_math_func = new Basic_Math_Func();
 
         System.out.println("attempting to run class");
         calc_interface.main_calc_interface();
