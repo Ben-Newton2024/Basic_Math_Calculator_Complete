@@ -13,12 +13,38 @@ public class Calc_Interface {
         // read console input line
         String input_equation = in.nextLine();
 
-        /*
-         TODO - basic checks to ensure math syntax is correct, no random + or operators at the end of the equations
-         sort the string into separate components of operators and digits
-        */
+        // check the syntax of equation given to check that it doesn't end in a + or a * e.g 4+2+ or 9/()89
+        int bracket_counter = 0;
+        for (int i = 0; i <= input_equation.length()-1; i++) {
+            //if there are brackets, count for even number of them to check correct amount.
+            //this does not however check to see if there are correct type of each when divided by 2
+            //this only shows there's enough in the system.
+            // however this is pretty pointless anyway atm as this program cannot use brackets yet.
+            if (String.valueOf(input_equation.charAt(i)).equals("(") || String.valueOf(input_equation.charAt(i)).equals(")"))
+                bracket_counter++;
 
+        }
 
+        String s = String.valueOf(input_equation.charAt(input_equation.length()-1));
+        if (s.equals("+") ||
+                s.equals("-") ||
+                s.equals("/") ||
+                s.equals("*")) {
+            // if the end of the equation is an operator, throw error equation cannot be computed
+            System.out.println("This equation cannot be computed. 0");
+        } else if (!((bracket_counter%2) == 0)){
+            //if bracket count is not even then we have problem.
+            // this check will be changed with needing to be checking both count of open and close brackets.
+            System.out.println("This equation cannot be computed. 1");
+        }else {
+            // if no problem with equation, compute and complete it.
+            compute_equation(input_equation, Basic_Math_Functions);
+        }
+    }
+
+    public void compute_equation(String input_equation, Basic_Math_Func Basic_Math_Functions){
+
+        // sort the string into separate components of operators and digits
         List<String> equation_list = equation_sorting(input_equation);
 
         // now complete the math onto this list above
@@ -30,7 +56,7 @@ public class Calc_Interface {
             loop_tracker ++;
 
             try {
-                // tries to convert item in position "i" to a integer, if it cannot then it must be an operator, as such
+                // tries to convert item in position "i" to an integer, if it cannot then it must be an operator, as such
                 // the catch it caught and pushed through to the needed code to complete the maths equation
                 Integer.parseInt(equation_list.get(i));
 
@@ -42,7 +68,7 @@ public class Calc_Interface {
                 // could cal on system garbage collector to clean up on digit be referencing it as null, but no point as
                 // it is already well optimised and will probably catch it later on anyway
             } catch (NumberFormatException ex) {
-                // if the item in position "i" is found to not be a digit when made into a integer, then it must be an
+                // if the item in position "i" is found to not be a digit when made into an integer, then it must be an
                 // operator.
                 // if it is an operator then we can take the digits from either side of it and use the operator to do
                 // what math needs to be done on it then
