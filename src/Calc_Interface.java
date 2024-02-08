@@ -14,6 +14,25 @@ public class Calc_Interface {
         String input_equation = in.nextLine();
 
         // check the syntax of equation given to check that it doesn't end in a + or a * e.g 4+2+ or 9/()89
+        int bracket_counter = getBracket_counter(input_equation);
+
+        String s = String.valueOf(input_equation.charAt(input_equation.length()-1));
+        if (s.equals("+") ||
+                s.equals("-") ||
+                s.equals("/") ||
+                s.equals("*")) {
+            // if the end of the equation is an operator, throw error equation cannot be computed
+            System.out.println("This equation cannot be computed. 0");
+        } else //if bracket count is not even then we have problem.
+            // this check will be changed with needing to be checking both count of open and close brackets.
+            if (!((bracket_counter%2) == 0)) System.out.println("This equation cannot be computed. 1");
+            else {
+            // if no problem with equation, compute and complete it.
+            compute_equation(input_equation, Basic_Math_Functions);
+        }
+    }
+
+    private static int getBracket_counter(String input_equation) {
         int bracket_counter = 0;
         for (int i = 0; i <= input_equation.length()-1; i++) {
             //if there are brackets, count for even number of them to check correct amount.
@@ -24,25 +43,10 @@ public class Calc_Interface {
                 bracket_counter++;
 
         }
-
-        String s = String.valueOf(input_equation.charAt(input_equation.length()-1));
-        if (s.equals("+") ||
-                s.equals("-") ||
-                s.equals("/") ||
-                s.equals("*")) {
-            // if the end of the equation is an operator, throw error equation cannot be computed
-            System.out.println("This equation cannot be computed. 0");
-        } else if (!((bracket_counter%2) == 0)){
-            //if bracket count is not even then we have problem.
-            // this check will be changed with needing to be checking both count of open and close brackets.
-            System.out.println("This equation cannot be computed. 1");
-        }else {
-            // if no problem with equation, compute and complete it.
-            compute_equation(input_equation, Basic_Math_Functions);
-        }
+        return bracket_counter;
     }
 
-    public void compute_equation(String input_equation, Basic_Math_Func Basic_Math_Functions){
+    private void compute_equation(String input_equation, Basic_Math_Func Basic_Math_Functions){
 
         // sort the string into separate components of operators and digits
         List<String> equation_list = equation_sorting(input_equation);
@@ -160,7 +164,7 @@ public class Calc_Interface {
         System.out.println(equation_list + " Answer");
     }
 
-    public List<String> equation_sorting(String input_equation){
+    private List<String> equation_sorting(String input_equation){
         // need to check to see if the inputted equation has the correct syntax, e.g, not end in a + or -, make sure there
         // are enough ( to match the amount of )
 
