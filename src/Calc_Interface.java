@@ -14,6 +14,7 @@ public class Calc_Interface {
         String input_equation = in.nextLine();
 
         // check the syntax of equation given to check that it doesn't end in a + or a * e.g 4+2+ or 9/()89
+
         // TODO need to check for any unknown variables, like for algebra, any a,b,c etc.
         int bracket_counter = getBracket_counter(input_equation);
 
