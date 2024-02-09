@@ -23,12 +23,29 @@ public class Calc_Interface {
                 s.equals("*")) {
             // if the end of the equation is an operator, throw error equation cannot be computed
             System.out.println("This equation cannot be computed. 0");
-        } else //if bracket count is not even then we have problem.
-            // this check will be changed with needing to be checking both count of open and close brackets.
-            if (!((bracket_counter%2) == 0)) System.out.println("This equation cannot be computed. 1");
-            else {
-            // if no problem with equation, compute and complete it.
-            compute_equation(input_equation, Basic_Math_Functions);
+        } else // if bracket count is not even then we have problem.
+            if (!((bracket_counter%2) == 0)) {
+                System.out.println("This equation cannot be computed. 1");
+            } else {
+                //brackets doo match as well, check for correct number of each
+                // need to check the amount of open brackets matches closed brackets.
+                int open_brackets = 0;
+                int closed_brackets = 0;
+                for(int j = 0; j<input_equation.length(); j++){
+                    if (String.valueOf(input_equation.charAt(j)).equals("(")){
+                        open_brackets++;
+                    } else if (String.valueOf(input_equation.charAt(j)).equals(")")) {
+                        closed_brackets ++;
+                    }
+                }
+                System.out.println("Number of open: "+ open_brackets + "   Numnber of closed:" + closed_brackets);
+                if (open_brackets != closed_brackets){
+                    // if number not even then brackets do not match and error.
+                    System.out.println("Error, this equation cannot be computed brackets dont match");
+                }else {
+                    // if no problem with equation, compute and complete it.
+                    compute_equation(input_equation, Basic_Math_Functions);
+                }
         }
     }
 
