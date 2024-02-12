@@ -24,6 +24,9 @@ public class Calc_Interface {
                 //loops through both strings comparing each character @ i in the list together.
                 if (String.valueOf(input_equation.charAt(j)).equals(String.valueOf(str_char_not_used.charAt(i)))) {
                     System.out.println("This equation cannot be computed 0");
+                    //need to exit loops
+                    i = 10000000;
+                    j = 10000000;
                 }
                 else {
 
