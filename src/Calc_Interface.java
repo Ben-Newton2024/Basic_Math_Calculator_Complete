@@ -216,7 +216,7 @@ public class Calc_Interface {
 
     private void compute_bracket_equation(String inputEquation, Basic_Math_Func basicMathFunctions,
                                           int open_brackets, int closed_brackets) {
-        //because there are brackets, we need to ensure that whatever is in the brackets is computer first.
+        // because there are brackets, we need to ensure that whatever is in the brackets is computer first.
 
         // we want to loop from the innermost brackets first and work outward, but also work from left to right
         // as such the equation
@@ -228,7 +228,14 @@ public class Calc_Interface {
         // 1 + ( -1 )
         // 0
 
-        //hopefully this is how it should work.
+        // find the first open and closed parenthesis, and do the computation in them
+        // the computation, could be just sent of to the basic compute_equation.
+        // replace, all section in the list with the output from above statement.
+        // repeat entire section again.
+        // keep repeating, till all brackets are finished
+        // include check to keep checking if there are any brackets left
+        // if answer is still an equation then pass to basic compute equation
+        // else output answer
     }
 
     private List<String> equation_sorting(String input_equation){
