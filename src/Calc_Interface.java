@@ -265,15 +265,15 @@ public class Calc_Interface {
                         // if open and close brackets are found then compute them.
                         // we need to loop from the 'i' to the 'j' appending what is inside the () to a new string
                         System.out.println("closed found 0");
-                        String bracket_equation = "";
+                        StringBuilder bracket_equation = new StringBuilder();
 
                         for (int k = i; k <= j; k++) {
-                            bracket_equation = bracket_equation + input_equation.charAt(k);
+                            bracket_equation.append(input_equation.charAt(k));
                             // once small bracket equation found we can compute this
                             // and when all is appended to the string after the complete loop
                         }
                         System.out.println(bracket_equation + "Bracket Equation");
-                        List<String> return_list = compute_equation(bracket_equation);
+                        List<String> return_list = compute_equation(bracket_equation.toString());
                         // once answer given back, we can remove the brackets.
                         return_list.removeLast();
                         return_list.removeFirst();
@@ -281,11 +281,7 @@ public class Calc_Interface {
                         // as we only passed the () equation it is safe to remove first and last position of the list.
                         // we can now convert to a string again, and pass back into the position we took it out of.
                         // then we need to restart the loop to check for more ().
-                        String answer_string = "";
-
-                        for (int p = 0; p <= return_list.size()-1; p++){
-                            answer_string = answer_string + return_list.get(p);
-                        }
+                        StringBuilder answer_string = getAnswer_string(return_list);
                         // now we have list converted to string, we can split the original equation.
                         System.out.println(answer_string + "list converted to string");
 
@@ -294,7 +290,6 @@ public class Calc_Interface {
                         // all string characters with "".
                         input_equation = input_equation.substring(0, i) + answer_string + input_equation.substring(j+1);
                         //need to reset string
-                        answer_string = null;
                         System.out.println(input_equation + "input Equation");
                         //reset 'i' and 'j' back to 0 to go through the loop again, till there are no longer any ()
                         if (found_closed_brackets == closed_brackets && found_open_brackets == open_brackets){
@@ -303,7 +298,7 @@ public class Calc_Interface {
                             compute_equation(input_equation);
                         }
                         else {
-                            // if the bracket count isnt equal then there are more brackets in teh equation.
+                            // if the bracket count isn't equal then there are more brackets in teh equation.
                             i = 0;
                             j = 0;
                         }
@@ -315,6 +310,15 @@ public class Calc_Interface {
 
     }
 
+    private static StringBuilder getAnswer_string(List<String> return_list) {
+        StringBuilder answer_string = new StringBuilder();
+
+        for (int p = 0; p <= return_list.size()-1; p++){
+            answer_string.append(return_list.get(p));
+        }
+        return answer_string;
+    }
+
 
     private List<String> equation_sorting(String input_equation){
         // need to check to see if the inputted equation has the correct syntax, e.g, not end in a + or -,
@@ -324,7 +328,7 @@ public class Calc_Interface {
         // create string to add parts of the equation to it to complete the calculation all in on go
         List<String> equation_list = new ArrayList<>();
 
-        // create string to add strings togehter to complete a number when adding to new list above.
+        // create string to add strings together to complete a number when adding to new list above.
         StringBuilder current_number = new StringBuilder();
 
 
