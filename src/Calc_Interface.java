@@ -1,14 +1,12 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class Calc_Interface {
+
+    private final Basic_Math_Func Basic_Math_Functions = new Basic_Math_Func();
 
     private boolean is_brackets = false;
     public void main_calc_interface() {
 
-        Basic_Math_Func Basic_Math_Functions = new Basic_Math_Func();
 
         Scanner in = new Scanner(System.in);
         // read console input line
@@ -71,10 +69,9 @@ public class Calc_Interface {
                                 i = 1000000;
                                 j = 1000000;
                                 if (is_brackets){
-                                    compute_bracket_equation(input_equation, Basic_Math_Functions,
-                                            open_brackets, closed_brackets);
+                                    compute_bracket_equation(input_equation, open_brackets, closed_brackets);
                                 }else {
-                                    compute_equation(input_equation, Basic_Math_Functions);
+                                    compute_equation(input_equation);
                                 }
                             }
                         }
@@ -96,7 +93,7 @@ public class Calc_Interface {
         return bracket_counter;
     }
 
-    private void compute_equation(String input_equation, Basic_Math_Func Basic_Math_Functions) {
+    private List<String> compute_equation(String input_equation) {
 
         // sort the string into separate components of operators and digits
         List<String> equation_list = equation_sorting(input_equation);
@@ -211,10 +208,10 @@ public class Calc_Interface {
             }
             System.out.println(equation_list + " Loop: #" + loop_tracker);
         }
-        System.out.println(equation_list + " Answer");
+        return equation_list;
     }
 
-    private void compute_bracket_equation(String inputEquation, Basic_Math_Func basicMathFunctions,
+    private void compute_bracket_equation(String input_equation,
                                           int open_brackets, int closed_brackets) {
         /*
          because there are brackets, we need to ensure that whatever is in the brackets is computer first.
@@ -239,7 +236,85 @@ public class Calc_Interface {
          else output answer
         */
 
+        System.out.println("Running Brackets checker/ calc");
+
+        int found_open_brackets = 0;
+        int found_closed_brackets = 0;
+
+
+        for (int i = 0; i < input_equation.length(); i++) {
+            // loops through both strings comparing each character @ i in the list together.
+            if (String.valueOf(input_equation.charAt(i)).equals("(")) {
+                // found open parenthesis.
+                // now need to find closed.
+                System.out.println("Open found 0");
+
+                // new loop from I, to end of parenthesis.
+                // if looping from same position an '(' is found, it will continue looping saying it has been found
+                // as such add 1 to position 'i'
+                for (int j = i+1; j < input_equation.length(); j++) {
+                    // loops through both strings comparing each character @ i in the list together.
+                    if (String.valueOf(input_equation.charAt(j)).equals("(")) {
+                        System.out.println("Open found 1");
+                        // if another open parenthesis is found before the last is closed, then we need to compute the inside parenthesis.
+                        j = input_equation.length() + 1;
+                    } else if (String.valueOf(input_equation.charAt(j)).equals(")")) {
+                        //once found both open and closed, we can increase counter for them
+                        found_open_brackets ++;
+                        found_closed_brackets ++;
+                        // if open and close brackets are found then compute them.
+                        // we need to loop from the 'i' to the 'j' appending what is inside the () to a new string
+                        System.out.println("closed found 0");
+                        String bracket_equation = "";
+
+                        for (int k = i; k <= j; k++) {
+                            bracket_equation = bracket_equation + input_equation.charAt(k);
+                            // once small bracket equation found we can compute this
+                            // and when all is appended to the string after the complete loop
+                        }
+                        System.out.println(bracket_equation + "Bracket Equation");
+                        List<String> return_list = compute_equation(bracket_equation);
+                        // once answer given back, we can remove the brackets.
+                        return_list.removeLast();
+                        return_list.removeFirst();
+                        System.out.println(return_list + "Return List");
+                        // as we only passed the () equation it is safe to remove first and last position of the list.
+                        // we can now convert to a string again, and pass back into the position we took it out of.
+                        // then we need to restart the loop to check for more ().
+                        String answer_string = "";
+
+                        for (int p = 0; p <= return_list.size()-1; p++){
+                            answer_string = answer_string + return_list.get(p);
+                        }
+                        // now we have list converted to string, we can split the original equation.
+                        System.out.println(answer_string + "list converted to string");
+
+
+                        // we know that the () start and end on 'i' and 'j', so we need to replace
+                        // all string characters with "".
+                        input_equation = input_equation.substring(0, i) + answer_string + input_equation.substring(j+1);
+                        //need to reset string
+                        answer_string = null;
+                        System.out.println(input_equation + "input Equation");
+                        //reset 'i' and 'j' back to 0 to go through the loop again, till there are no longer any ()
+                        if (found_closed_brackets == closed_brackets && found_open_brackets == open_brackets){
+                            System.out.println("All brackets accounted for");
+                            // all brackets done, then if anything else not computed can be computed
+                            compute_equation(input_equation);
+                        }
+                        else {
+                            // if the bracket count isnt equal then there are more brackets in teh equation.
+                            i = 0;
+                            j = 0;
+                        }
+                    }
+                }
+            }
+        }
+        // once complete loop of the entire string has been made, we can check to see if the amount of brackets found withing the equation still match
+
     }
+
 
     private List<String> equation_sorting(String input_equation){
         // need to check to see if the inputted equation has the correct syntax, e.g, not end in a + or -,
