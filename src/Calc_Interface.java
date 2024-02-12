@@ -7,6 +7,18 @@ public class Calc_Interface {
     private boolean is_brackets = false;
     public void main_calc_interface() {
 
+        /*
+         TODO ensure that BIDMAS IS FOLLOWED
+         BRACKETS ARE NOW OPERATIONAL.
+         INDICES ARE NOW OPERATIONAL
+         DIVISION DONE
+         MULTIPLICATION DONE
+         ADDITION DONE
+         SUBTRACTION DONE.
+         ALL Sections of BIDMAS is now implemented
+         now need to include logic to ensure BIDMAS is followed.
+        */
+
 
         Scanner in = new Scanner(System.in);
         // read console input line
@@ -289,7 +301,7 @@ public class Calc_Interface {
                         // check to see if the brackets have anything inside of them
                         if (i-j >= 0){
                             // if difference between numbers within brackets is >0 as im taking away the bigger number than there must be something in the brackets
-                            // if that isnt the case then we do this.
+                            // if that isn't the case then we do this.
                             System.out.println("This Equation cannot be computed. 4");
                             // reset loop back to make another pass since the () have not been removed as nothing was in them
                             System.out.println(input_equation);
