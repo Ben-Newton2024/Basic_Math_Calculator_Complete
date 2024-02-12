@@ -37,11 +37,7 @@ public class Basic_Math_Func {
 
     // Extra methods for mathematics like Square roots, squaring a number, or even cubing. made for Int and Float.
 
-    public int basic_int_square_root(int a) {
-        return (int) Math.sqrt(a);
-    }
-
-    public float basic_float_square_root(float a) {
-        return (float) Math.sqrt(a);
+    public int basic_indicies(int a, int b){
+        return (int) Math.pow(a, b);
     }
 }
