@@ -70,10 +70,11 @@ public class Calc_Interface {
 
                                 i = 1000000;
                                 j = 1000000;
-                                if (is_brackets == true){
-                                    compute_bracket_equation(input_equation, Basic_Math_Functions, is_brackets);
+                                if (is_brackets){
+                                    compute_bracket_equation(input_equation, Basic_Math_Functions,
+                                            open_brackets, closed_brackets);
                                 }else {
-                                    compute_equation(input_equation, Basic_Math_Functions, is_brackets);
+                                    compute_equation(input_equation, Basic_Math_Functions);
                                 }
                             }
                         }
@@ -95,7 +96,7 @@ public class Calc_Interface {
         return bracket_counter;
     }
 
-    private void compute_equation(String input_equation, Basic_Math_Func Basic_Math_Functions, boolean is_brackets) {
+    private void compute_equation(String input_equation, Basic_Math_Func Basic_Math_Functions) {
 
         // sort the string into separate components of operators and digits
         List<String> equation_list = equation_sorting(input_equation);
@@ -213,15 +214,16 @@ public class Calc_Interface {
         System.out.println(equation_list + " Answer");
     }
 
-    private void compute_bracket_equation(String inputEquation, Basic_Math_Func basicMathFunctions, boolean isBrackets) {
+    private void compute_bracket_equation(String inputEquation, Basic_Math_Func basicMathFunctions,
+                                          int open_brackets, int closed_brackets) {
         //because there are brackets, we need to ensure that whatever is in the brackets is computer first.
 
 
     }
 
     private List<String> equation_sorting(String input_equation){
-        // need to check to see if the inputted equation has the correct syntax, e.g, not end in a + or -, make sure there
-        // are enough ( to match the amount of )
+        // need to check to see if the inputted equation has the correct syntax, e.g, not end in a + or -,
+        // make sure there are enough ( to match the amount of )
 
 
         // create string to add parts of the equation to it to complete the calculation all in on go
