@@ -218,7 +218,17 @@ public class Calc_Interface {
                                           int open_brackets, int closed_brackets) {
         //because there are brackets, we need to ensure that whatever is in the brackets is computer first.
 
+        // we want to loop from the innermost brackets first and work outward, but also work from left to right
+        // as such the equation
+        // 2 + ( 2 - 3 ) + ( 3 - ( 1 * 4 ) )
+        // 2 + ( -1 ) ...
+        // 1 + ( 3 - ( 1 * 4 ) )
+        // 1 + ( 3 - ( 4 ) )
+        // 1 + ( 3 - 4 )
+        // 1 + ( -1 )
+        // 0
 
+        //hopefully this is how it should work.
     }
 
     private List<String> equation_sorting(String input_equation){
