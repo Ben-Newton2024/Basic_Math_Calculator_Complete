@@ -24,8 +24,8 @@ public class Calc_Interface {
                 if (String.valueOf(input_equation.charAt(j)).equals(String.valueOf(str_char_not_used.charAt(i)))) {
                     System.out.println("This equation cannot be computed 0");
                     //need to exit loops
-                    i = 10000000;
-                    j = 10000000;
+                    i = input_equation.length();
+                    j = input_equation.length();
                 }
                 else {
 
@@ -287,12 +287,14 @@ public class Calc_Interface {
                         System.out.println("closed found 0");
 
                         // check to see if the brackets have anything inside of them
-                        if (i-j <= 0){
-                            // if there is only one difference in them, then there is no need to compute anything, as all it is, is ()
-                            System.out.println("Nothing inside ()");
-                            input_equation = input_equation.substring(0, i) + input_equation.substring(j+1);
-                            // reset loop back to make another pass since the () have no been removed as nothing was in them
-                            i=0;
+                        if (i-j >= 0){
+                            // if difference between numbers within brackets is >0 as im taking away the bigger number than there must be something in the brackets
+                            // if that isnt the case then we do this.
+                            System.out.println("This Equation cannot be computed. 4");
+                            // reset loop back to make another pass since the () have not been removed as nothing was in them
+                            System.out.println(input_equation);
+                            i=input_equation.length();
+                            j=input_equation.length();
                         } else{
                             // else there are numbers inside the brackets as such can compute.
                             StringBuilder bracket_equation = getStringBuilder(input_equation, i, j);
@@ -332,7 +334,6 @@ public class Calc_Interface {
             }
         }
         // once complete loop of the entire string has been made, we can check to see if the amount of brackets found withing the equation still match
-
     }
 
     private static StringBuilder getStringBuilder(String input_equation, int i, int j) {
