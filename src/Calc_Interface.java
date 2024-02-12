@@ -59,6 +59,7 @@ public class Calc_Interface {
                         } else {
                             //brackets doo match as well, check for correct number of each
                             // need to check the amount of open brackets matches closed brackets.
+
                             int open_brackets = 0;
                             int closed_brackets = 0;
                             for (int k = 0; k < input_equation.length(); k++) {
