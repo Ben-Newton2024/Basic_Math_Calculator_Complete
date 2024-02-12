@@ -54,12 +54,17 @@ public class Calc_Interface {
                                     closed_brackets++;
                                 }
                             }
-                            System.out.println("Number of open: " + open_brackets + "   Numnber of closed:" + closed_brackets);
+                            System.out.println("Number of open: " + open_brackets + "   Number of closed:" + closed_brackets);
                             if (open_brackets != closed_brackets) {
                                 // if number not even then brackets do not match and error.
                                 System.out.println("This equation cannot be computed. 3");
                             } else {
                                 // if no problem with equation, compute and complete it.
+
+                                //need to ensure that it previous for loops end as the conditions have been met
+
+                                i = 1000000;
+                                j = 1000000;
                                 compute_equation(input_equation, Basic_Math_Functions);
                             }
                         }
@@ -208,7 +213,7 @@ public class Calc_Interface {
         // create string to add parts of the equation to it to complete the calculation all in on go
         List<String> equation_list = new ArrayList<>();
 
-        // create list ot add together current numbers
+        // create string to add strings togehter to complete a number when adding to new list above.
         StringBuilder current_number = new StringBuilder();
 
 
@@ -219,7 +224,9 @@ public class Calc_Interface {
                 current_number.append(input_equation.charAt(i));
             } else{
                 // add the current number to the equation liat
-                equation_list.add(current_number.toString());
+                if(!current_number.isEmpty()) {
+                    equation_list.add(current_number.toString());
+                }
 
                 // since the latest number is now added ot the list of equations, and the newest point of I is no longer
                 // pointing to a digit then we need to add the operator to the list of equations.
@@ -233,9 +240,8 @@ public class Calc_Interface {
         // end of list has been achieved as such add any remain digits or operators.
         System.out.println("End of string has been found");
         if (!current_number.isEmpty()) {
+            System.out.println("adding last number to list");
             equation_list.add(current_number.toString());
-        } else {
-            equation_list.add(String.valueOf((input_equation.charAt(input_equation.length()-1))));
         }
         System.out.println(equation_list);
         // at the end of this method there should just be a list with all digits and operators append to it in the
