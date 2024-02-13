@@ -3,10 +3,8 @@ import java.util.*;
 public class Calc_Interface {
 
     private final Basic_Math_Func Basic_Math_Functions = new Basic_Math_Func();
-
     private boolean is_brackets = false;
     private boolean is_indices = false;
-
     public void main_calc_interface() {
 
         /*
@@ -163,7 +161,7 @@ public class Calc_Interface {
                         // add the digits from either side of the equations list together.
                         int a = Integer.parseInt(equation_list.get(x - 1));
                         int b = Integer.parseInt(equation_list.get(x + 1));
-                        int c = Basic_Math_Functions.basic_indicies(a, b);
+                        int c = Basic_Math_Functions.basic_indices(a, b);
 
                         // answer c is found and can be added to the list, this can be done by removing the current operator
                         // and the two digits on either side of it, shortening the list.
