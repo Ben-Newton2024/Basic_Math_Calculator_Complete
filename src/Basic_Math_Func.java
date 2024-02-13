@@ -38,6 +38,7 @@ public class Basic_Math_Func {
     // Extra methods for mathematics like Square roots, squaring a number, or even cubing. made for Int and Float.
 
     public int basic_indicies(int a, int b){
+        // could be hard coded with a loop multiplying itself. but using build in Math simple.
         return (int) Math.pow(a, b);
     }
 }
