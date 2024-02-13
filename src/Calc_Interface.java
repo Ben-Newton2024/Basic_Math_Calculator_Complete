@@ -6,6 +6,7 @@ public class Calc_Interface {
 
     private boolean is_brackets = false;
     private boolean is_indices = false;
+
     public void main_calc_interface() {
 
         /*
@@ -28,84 +29,94 @@ public class Calc_Interface {
         // check the syntax of equation given to check that it doesn't end in a + or a * e.g 4+2+ or 9/()89
 
         // check for any unknown variables, like for algebra, any a,b,c etc.
+        int bracket_counter = getBracket_counter(input_equation);
+        // if bracket counter > 0 then there are brackets to change boolean
+        // is_brackets to true for later use in calculator
+        if (bracket_counter > 0) {
+            is_brackets = true;
+        }
+
+        String s = String.valueOf(input_equation.charAt(input_equation.length() - 1));
+        if (s.equals("+") ||
+                s.equals("-") ||
+                s.equals("/") ||
+                s.equals("*")) {
+            // if the end of the equation is an operator, throw error equation cannot be computed
+            System.out.println("This equation cannot be computed. 1");
+        }
 
         String str_char_not_used = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,<>?|@';:{[}]#~_&$£!";
 
-        for(int j = 0; j<input_equation.length(); j++){
-            for(int i = 0; i<str_char_not_used.length(); i++) {
+        for (int j = 0; j < input_equation.length(); j++) {
+            for (int i = 0; i < str_char_not_used.length(); i++) {
                 //loops through both strings comparing each character @ i in the list together.
                 if (String.valueOf(input_equation.charAt(j)).equals(String.valueOf(str_char_not_used.charAt(i)))) {
                     System.out.println("This equation cannot be computed 0");
                     //need to exit loops
                     i = input_equation.length();
                     j = input_equation.length();
-                } else if (String.valueOf(input_equation.charAt(j)).equals("^")){
+
+                }
+            }
+            for (int i = 0; i < input_equation.length(); i++) {
+                if (String.valueOf(input_equation.charAt(i)).equals("^")) {
                     // check to see if there are any indices, if there are then change boolean value to true
                     // this is for later computations
                     is_indices = true;
+                    //doesn't matter how many there are, just need to check if there is one.
+                    break;
                 }
-                else {
+            }// if bracket count is not even then we have problem.
+            if (!((bracket_counter % 2) == 0)) {
+                System.out.println("This equation cannot be computed. 2");
+                // send to max value of J to exit loop.
+                j = input_equation.length();
+            } else {
+                //brackets doo match as well, check for correct number of each
+                // need to check the amount of open brackets matches closed brackets.
 
-                    int bracket_counter = getBracket_counter(input_equation);
-                    // if bracket counter > 0 then there are brackets to change boolean is_brackets to true for later use in calculator
-                    if(bracket_counter > 0){
-                        is_brackets = true;
+                int open_brackets = 0;
+                int closed_brackets = 0;
+                for (int k = 0; k < input_equation.length(); k++) {
+                    if (String.valueOf(input_equation.charAt(k)).equals("(")) {
+                        open_brackets++;
+                    } else if (String.valueOf(input_equation.charAt(k)).equals(")")) {
+                        closed_brackets++;
                     }
-                    String s = String.valueOf(input_equation.charAt(input_equation.length() - 1));
-                    if (s.equals("+") ||
-                            s.equals("-") ||
-                            s.equals("/") ||
-                            s.equals("*")) {
-                        // if the end of the equation is an operator, throw error equation cannot be computed
-                        System.out.println("This equation cannot be computed. 1");
-                    } else // if bracket count is not even then we have problem.
-                        if (!((bracket_counter % 2) == 0)) {
-                            System.out.println("This equation cannot be computed. 2");
-                        } else {
-                            //brackets doo match as well, check for correct number of each
-                            // need to check the amount of open brackets matches closed brackets.
+                }
+                System.out.println("Number of open: " + open_brackets + "   Number of closed:"
+                        + closed_brackets);
+                if (open_brackets != closed_brackets) {
+                    // if number not even then brackets do not match and error.
+                    System.out.println("This equation cannot be computed. 3");
+                    // max loop int to end loops.
+                    j = input_equation.length();
 
-                            int open_brackets = 0;
-                            int closed_brackets = 0;
-                            for (int k = 0; k < input_equation.length(); k++) {
-                                if (String.valueOf(input_equation.charAt(k)).equals("(")) {
-                                    open_brackets++;
-                                } else if (String.valueOf(input_equation.charAt(k)).equals(")")) {
-                                    closed_brackets++;
-                                }
-                            }
-                            System.out.println("Number of open: " + open_brackets + "   Number of closed:" + closed_brackets);
-                            if (open_brackets != closed_brackets) {
-                                // if number not even then brackets do not match and error.
-                                System.out.println("This equation cannot be computed. 3");
+                } else {
+                    // if no problem with equation, compute and complete it.
 
-                            } else {
-                                // if no problem with equation, compute and complete it.
-
-                                //need to ensure that it previous for loops end as the conditions have been met
-
-                                i = 1000000;
-                                j = 1000000;
-                                if (is_brackets){
-                                    compute_bracket_equation(input_equation, open_brackets, closed_brackets);
-                                }else {
-                                    compute_equation(input_equation);
-                                }
-                            }
-                        }
+                    //need to ensure that it previous for loops end as the conditions have been met
+                    j = input_equation.length();
+                    if (is_brackets) {
+                        compute_bracket_equation(input_equation, open_brackets, closed_brackets);
+                    } else {
+                        compute_equation(input_equation);
+                    }
                 }
             }
+
         }
     }
 
     private static int getBracket_counter(String input_equation) {
         int bracket_counter = 0;
-        for (int i = 0; i <= input_equation.length()-1; i++) {
+        for (int i = 0; i <= input_equation.length() - 1; i++) {
             //if there are brackets, count for even number of them to check correct amount.
             //this does not however check to see if there are correct type of each when divided by 2
             //this only shows there's enough in the system.
             // however this is pretty pointless anyway atm as this program cannot use brackets yet.
-            if (String.valueOf(input_equation.charAt(i)).equals("(") || String.valueOf(input_equation.charAt(i)).equals(")"))
+            if (String.valueOf(input_equation.charAt(i)).equals("(")
+                    || String.valueOf(input_equation.charAt(i)).equals(")"))
                 bracket_counter++;
         }
         return bracket_counter;
@@ -121,11 +132,77 @@ public class Calc_Interface {
         // loop tracking number
         int loop_tracker = 0;
         // if there are no brackets, just read left to right completing the equation.
+        //check to see if there are any indices in the equation, and count them till they are all calculated,
+        // once it goes back down to 0, we continue back to the calculation as normal.
+        int num_indices_local = 0;
+
+
+
+        if (is_indices) {
+            for (int i = 0; i <= equation_list.size()-1; i++){
+                if(Objects.equals(equation_list.get(i), "^")){
+                    num_indices_local ++;
+                }
+            }
+
+            for (int x = 0; x <= equation_list.size()-1; x++) {
+                try {
+                    Integer.parseInt((equation_list.get(x)));
+                } catch (NumberFormatException ex) {
+                    if (Objects.equals(equation_list.get(x), "^")) {
+                        loop_tracker++;
+                        // If there is this, we need to ensure this is done before anything else,
+                        // even moving from left ot right.
+                        // if brackets include this and extra than this needs to be done first.
+                        // while looping through the list it goes left to right, so if an indices is here, it won't be don't
+                        // till other calculations are done before from left to right.
+                        // Could loop through the given equation till it is found, while using the is_indices boolean check
+                        // to activate the code, else it would be inefficient to constantly loop back through it
+                        // every time this method as called.
+
+                        // add the digits from either side of the equations list together.
+                        int a = Integer.parseInt(equation_list.get(x - 1));
+                        int b = Integer.parseInt(equation_list.get(x + 1));
+                        int c = Basic_Math_Functions.basic_indicies(a, b);
+
+                        // answer c is found and can be added to the list, this can be done by removing the current operator
+                        // and the two digits on either side of it, shortening the list.
+
+                        // replacing the operator with the answer
+                        equation_list.set(x, String.valueOf(c));
+
+                        // now removing the digits on either side of that "operator" now answer digit
+                        equation_list.remove(x - 1);
+                        //removed position before i, therefore list is now 1 position smaller
+                        equation_list.remove(x);
+
+                        //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
+                        // list correctly with no blank positions or reset positions that duplicate.
+                        x = 0;
+                        num_indices_local--; // remove from count as one has been completed.
+                        System.out.println(equation_list);
+                        System.out.println(is_indices);
+                    }
+                }
+            }
+            if (num_indices_local == 0){
+                // if all indices are calculated then exit.
+                is_indices = false;
+            }
+        } else {
+            // if indices is false, then normal calc
+            return calc_ifs(equation_list, loop_tracker);
+        }
+        return equation_list;
+    }
+
+    private List<String> calc_ifs(List<String> equation_list, int loop_tracker) {
         for (int i = 0; i <= equation_list.size() - 1; i++) {
             loop_tracker++;
 
             try {
-                // tries to convert item in position "i" to an integer, if it cannot then it must be an operator, as such
+                // tries to convert item in position "i" to an integer,
+                // if it cannot then it must be an operator, as such
                 // the catch it caught and pushed through to the needed code to complete the maths equation
                 Integer.parseInt(equation_list.get(i));
 
@@ -141,32 +218,7 @@ public class Calc_Interface {
                 // operator.
                 // if it is an operator then we can take the digits from either side of it and use the operator to do
                 // what math needs to be done on it then
-                if (Objects.equals(equation_list.get(i), "^")) {
-                    // If there is this, we need to ensure this is done before anything else, even moving from left ot right.
-                    // if brackets include this and extra than this needs to be done first.
-                    // while looping through the list it goes left to right, so if an indices is here, it won't be don't
-                    // till other calculations are done before from left to right.
-
-                    // add the digits from either side of the equations list together.
-                    int a = Integer.parseInt(equation_list.get(i - 1));
-                    int b = Integer.parseInt(equation_list.get(i + 1));
-                    int c = Basic_Math_Functions.basic_indicies(a, b);
-
-                    // answer c is found and can be added to the list, this can be done by removing the current operator
-                    // and the two digits on either side of it, shortening the list.
-
-                    // replacing the operator with the answer
-                    equation_list.set(i, String.valueOf(c));
-
-                    // now removing the digits on either side of that "operator" now answer digit
-                    equation_list.remove(i - 1);
-                    //removed position before i, therefore list is now 1 position smaller
-                    equation_list.remove(i);
-
-                    //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
-                    // list correctly with no blank positions or reset positions that duplicate.
-                    i = 0;
-                } else if (Objects.equals(equation_list.get(i), "/")) {
+                if (Objects.equals(equation_list.get(i), "/")) {
                     // add the digits from either side of the equations list together.
                     int a = Integer.parseInt(equation_list.get(i - 1));
                     int b = Integer.parseInt(equation_list.get(i + 1));
@@ -253,6 +305,7 @@ public class Calc_Interface {
         return equation_list;
     }
 
+
     private void compute_bracket_equation(String input_equation,
                                           int open_brackets, int closed_brackets) {
         /*
@@ -298,7 +351,8 @@ public class Calc_Interface {
                     // loops through both strings comparing each character @ i in the list together.
                     if (String.valueOf(input_equation.charAt(j)).equals("(")) {
                         System.out.println("Open found 1");
-                        // if another open parenthesis is found before the last is closed, then we need to compute the inside parenthesis.
+                        // if another open parenthesis is found before the last is closed,
+                        // then we need to compute the inside parenthesis.
                         j = input_equation.length() + 1;
                     } else if (String.valueOf(input_equation.charAt(j)).equals(")")) {
                         //once found both open and closed, we can increase counter for them
@@ -311,10 +365,12 @@ public class Calc_Interface {
 
                         // check to see if the brackets have anything inside of them
                         if (i-j >= 0){
-                            // if difference between numbers within brackets is >0 as im taking away the bigger number than there must be something in the brackets
+                            // if difference between numbers within brackets is >0 as im taking away
+                            // the bigger number than there must be something in the brackets
                             // if that isn't the case then we do this.
                             System.out.println("This Equation cannot be computed. 4");
-                            // reset loop back to make another pass since the () have not been removed as nothing was in them
+                            // reset loop back to make another pass since the () have not been
+                            // removed as nothing was in them
                             System.out.println(input_equation);
                             i=input_equation.length();
                             j=input_equation.length();
@@ -337,7 +393,9 @@ public class Calc_Interface {
 
                             // we know that the () start and end on 'i' and 'j', so we need to replace
                             // all string characters with "".
-                            input_equation = input_equation.substring(0, i) + answer_string + input_equation.substring(j+1);
+                            input_equation = input_equation.substring(0, i) + answer_string +
+                                    input_equation.substring(j+1);
+
                             //need to reset string
                             System.out.println(input_equation + "input Equation");
                             //reset 'i' and 'j' back to 0 to go through the loop again, till there are no longer any ()
@@ -356,7 +414,6 @@ public class Calc_Interface {
                 }
             }
         }
-        // once complete loop of the entire string has been made, we can check to see if the amount of brackets found withing the equation still match
     }
 
     private static StringBuilder getStringBuilder(String input_equation, int i, int j) {
