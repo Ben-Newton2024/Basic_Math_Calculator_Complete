@@ -7,18 +7,6 @@ public class Calc_Interface {
     private boolean is_indices = false;
     public void main_calc_interface() {
 
-        /*
-         TODO ensure that BIDMAS IS FOLLOWED
-         BRACKETS ARE NOW OPERATIONAL.
-         INDICES ARE NOW OPERATIONAL
-         DIVISION DONE
-         MULTIPLICATION DONE
-         ADDITION DONE
-         SUBTRACTION DONE.
-         ALL Sections of BIDMAS is now implemented
-         now need to include logic to ensure BIDMAS is followed.
-        */
-
 
         Scanner in = new Scanner(System.in);
         // read console input line
@@ -186,10 +174,13 @@ public class Calc_Interface {
             if (num_indices_local == 0){
                 // if all indices are calculated then exit.
                 is_indices = false;
+                return calc_ifs(equation_list, loop_tracker);
+
             }
         } else {
             // if indices is false, then normal calc
             return calc_ifs(equation_list, loop_tracker);
+
         }
         return equation_list;
     }
@@ -197,6 +188,12 @@ public class Calc_Interface {
     private List<String> calc_ifs(List<String> equation_list, int loop_tracker) {
         for (int i = 0; i <= equation_list.size() - 1; i++) {
             loop_tracker++;
+
+            /* TODO convert each checker to a full loop of each potential operator
+                this means that it can loop through the equation, complete all division,
+                then multiply etc
+                following the bidmas rules.
+             */
 
             try {
                 // tries to convert item in position "i" to an integer,
