@@ -4,7 +4,15 @@ public class Calc_Interface {
 
     private final Basic_Math_Func Basic_Math_Functions = new Basic_Math_Func();
     private boolean is_brackets = false;
-    private boolean is_indices = false;
+
+
+
+    /*
+                LOGIC FOR INPUT AND ERROR CHECKING
+
+                           Below.
+
+     */
     public void main_calc_interface() {
 
 
@@ -44,15 +52,6 @@ public class Calc_Interface {
 
                 }
             }
-            for (int i = 0; i < input_equation.length(); i++) {
-                if (String.valueOf(input_equation.charAt(i)).equals("^")) {
-                    // check to see if there are any indices, if there are then change boolean value to true
-                    // this is for later computations
-                    is_indices = true;
-                    //doesn't matter how many there are, just need to check if there is one.
-                    break;
-                }
-            }// if bracket count is not even then we have problem.
             if (!((bracket_counter % 2) == 0)) {
                 System.out.println("This equation cannot be computed. 2");
                 // send to max value of J to exit loop.
@@ -70,8 +69,6 @@ public class Calc_Interface {
                         closed_brackets++;
                     }
                 }
-                System.out.println("Number of open: " + open_brackets + "   Number of closed:"
-                        + closed_brackets);
                 if (open_brackets != closed_brackets) {
                     // if number not even then brackets do not match and error.
                     System.out.println("This equation cannot be computed. 3");
@@ -94,112 +91,60 @@ public class Calc_Interface {
         }
     }
 
-    private static int getBracket_counter(String input_equation) {
-        int bracket_counter = 0;
-        for (int i = 0; i <= input_equation.length() - 1; i++) {
-            //if there are brackets, count for even number of them to check correct amount.
-            //this does not however check to see if there are correct type of each when divided by 2
-            //this only shows there's enough in the system.
-            // however this is pretty pointless anyway atm as this program cannot use brackets yet.
-            if (String.valueOf(input_equation.charAt(i)).equals("(")
-                    || String.valueOf(input_equation.charAt(i)).equals(")"))
-                bracket_counter++;
-        }
-        return bracket_counter;
-    }
+    /*
+                LOGIC FOR FOLLOWING BIDMAS WITH GIVEN LIST OF EQUATIONS
+
+                                    Below.
+     */
 
     private List<String> compute_equation(String input_equation) {
 
         // sort the string into separate components of operators and digits
         List<String> equation_list = equation_sorting(input_equation);
 
-        // now complete the math onto this list above
+        /*
+         this equation list, could have brackets sent to it and be a smaller part of the given equation,
+         but still follow bidmas anyway.
+         now complete the math onto this list above
 
-        // loop tracking number
-        int loop_tracker = 0;
-        // if there are no brackets, just read left to right completing the equation.
-        //check to see if there are any indices in the equation, and count them till they are all calculated,
-        // once it goes back down to 0, we continue back to the calculation as normal.
-        int num_indices_local = 0;
+         Follow BIDMAS
+
+         This however cannot be the most efficient version of this, as this assumes there is going to be
+         one of each operator within the calculation
+         as such it will go through the list looping multiple times, till the equation is sorted
+         some checks could be added in the future, showing what operators are involved with the equation,
+         to only need to loop through the list the minimum amount of times. rather doing the max
+         amount of times per equation which will waste 'time' and space.
+         This could be done via if statements and boolean values that loops the entire equation once,
+         that changes values from false to true if an operator is detected.
+         as such later here, the ifs can catch if an only the '+' operator is detected as such skip any unneeded loops
+         from the indices and decision etc., to only need to loop the once at the addition.
+        */
 
 
-
-        if (is_indices) {
-            for (int i = 0; i <= equation_list.size()-1; i++){
-                if(Objects.equals(equation_list.get(i), "^")){
-                    num_indices_local ++;
-                }
-            }
-
-            for (int x = 0; x <= equation_list.size()-1; x++) {
-                try {
-                    Integer.parseInt((equation_list.get(x)));
-                } catch (NumberFormatException ex) {
-                    if (Objects.equals(equation_list.get(x), "^")) {
-                        loop_tracker++;
-                        // If there is this, we need to ensure this is done before anything else,
-                        // even moving from left ot right.
-                        // if brackets include this and extra than this needs to be done first.
-                        // while looping through the list it goes left to right, so if an indices is here, it won't be don't
-                        // till other calculations are done before from left to right.
-                        // Could loop through the given equation till it is found, while using the is_indices boolean check
-                        // to activate the code, else it would be inefficient to constantly loop back through it
-                        // every time this method as called.
-
-                        // add the digits from either side of the equations list together.
-                        int a = Integer.parseInt(equation_list.get(x - 1));
-                        int b = Integer.parseInt(equation_list.get(x + 1));
-                        int c = Basic_Math_Functions.basic_indices(a, b);
-
-                        // answer c is found and can be added to the list, this can be done by removing the current operator
-                        // and the two digits on either side of it, shortening the list.
-
-                        // replacing the operator with the answer
-                        equation_list.set(x, String.valueOf(c));
-
-                        // now removing the digits on either side of that "operator" now answer digit
-                        equation_list.remove(x - 1);
-                        //removed position before i, therefore list is now 1 position smaller
-                        equation_list.remove(x);
-
-                        //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
-                        // list correctly with no blank positions or reset positions that duplicate.
-                        x = 0;
-                        num_indices_local--; // remove from count as one has been completed.
-                        System.out.println(equation_list);
-                        System.out.println(is_indices);
-                    }
-                }
-            }
-            if (num_indices_local == 0){
-                // if all indices are calculated then exit.
-                is_indices = false;
-                return calc_ifs(equation_list, loop_tracker);
-
-            }
-        } else {
-            // if indices is false, then normal calc
-            return calc_ifs(equation_list, loop_tracker);
-
-        }
+        equation_list = calc_indices(equation_list);
+        equation_list = calc_division(equation_list);
+        equation_list = calc_multiplication(equation_list);
+        equation_list = calc_addition(equation_list);
+        equation_list = calc_subtraction(equation_list);
+        System.out.println(equation_list);
         return equation_list;
     }
 
-    private List<String> calc_ifs(List<String> equation_list, int loop_tracker) {
-        for (int i = 0; i <= equation_list.size() - 1; i++) {
-            loop_tracker++;
 
-            /* TODO convert each checker to a full loop of each potential operator
-                this means that it can loop through the equation, complete all division,
-                then multiply etc
-                following the bidmas rules.
-             */
+    /*
+                LOGIC FOR CALCULATIONS
 
+                        Below.
+     */
+
+    private List<String> calc_indices(List<String> equation_list) {
+        for (int x = 0; x <= equation_list.size() - 1; x++) {
             try {
                 // tries to convert item in position "i" to an integer,
                 // if it cannot then it must be an operator, as such
                 // the catch it caught and pushed through to the needed code to complete the maths equation
-                Integer.parseInt(equation_list.get(i));
+                Integer.parseInt(equation_list.get(1));
 
                 // if current item in list position can be converted to a digit, nothing is really needed to happen, as
                 // such rest of code happens in catch.
@@ -213,93 +158,285 @@ public class Calc_Interface {
                 // operator.
                 // if it is an operator then we can take the digits from either side of it and use the operator to do
                 // what math needs to be done on it then
-                if (Objects.equals(equation_list.get(i), "/")) {
+                if (Objects.equals(equation_list.get(x), "^")) {
+                    // If there is this, we need to ensure this is done before anything else,
+                    // even moving from left ot right.
+                    // if brackets include this and extra than this needs to be done first.
+                    // while looping through the list it goes left to right, so if an indices is here, it won't be don't
+                    // till other calculations are done before from left to right.
+                    // Could loop through the given equation till it is found, while using the is_indices boolean check
+                    // to activate the code, else it would be inefficient to constantly loop back through it
+                    // every time this method as called.
+
                     // add the digits from either side of the equations list together.
-                    int a = Integer.parseInt(equation_list.get(i - 1));
-                    int b = Integer.parseInt(equation_list.get(i + 1));
+                    int a = Integer.parseInt(equation_list.get(x - 1));
+                    int b = Integer.parseInt(equation_list.get(x + 1));
+                    int c = Basic_Math_Functions.basic_indices(a, b);
+
+                    // answer c is found and can be added to the list, this can be done by removing the current operator
+                    // and the two digits on either side of it, shortening the list.
+
+                    // replacing the operator with the answer
+                    equation_list.set(x, String.valueOf(c));
+
+                    // now removing the digits on either side of that "operator" now answer digit
+                    equation_list.remove(x - 1);
+                    //removed position before i, therefore list is now 1 position smaller
+                    equation_list.remove(x);
+
+                    //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
+                    // list correctly with no blank positions or reset positions that duplicate.
+                    x = 0;
+                }
+            }
+        }
+        return equation_list;
+    }
+
+
+
+
+    private List<String> calc_division(List<String> equation_list) {
+        for (int x = 0; x <= equation_list.size() - 1; x++) {
+            try {
+                // tries to convert item in position "i" to an integer,
+                // if it cannot then it must be an operator, as such
+                // the catch it caught and pushed through to the needed code to complete the maths equation
+                Integer.parseInt(equation_list.get(1));
+
+                // if current item in list position can be converted to a digit, nothing is really needed to happen, as
+                // such rest of code happens in catch.
+                // it is probably better to ensure all code happens in the try, rather than the catch, however -
+                // im working getting it to work before fixing syntax and "perfect" coding currently.
+
+                // could cal on system garbage collector to clean up on digit be referencing it as null, but no point as
+                // it is already well optimised and will probably catch it later on anyway
+            } catch (NumberFormatException ex) {
+                // if the item in position "i" is found to not be a digit when made into an integer, then it must be an
+                // operator.
+                // if it is an operator then we can take the digits from either side of it and use the operator to do
+                // what math needs to be done on it then
+                if (Objects.equals(equation_list.get(x), "/")) {
+                    // If there is this, we need to ensure this is done before anything else,
+                    // even moving from left ot right.
+                    // if brackets include this and extra than this needs to be done first.
+                    // while looping through the list it goes left to right, so if an indices is here, it won't be don't
+                    // till other calculations are done before from left to right.
+                    // Could loop through the given equation till it is found, while using the is_indices boolean check
+                    // to activate the code, else it would be inefficient to constantly loop back through it
+                    // every time this method as called.
+
+                    // add the digits from either side of the equations list together.
+                    int a = Integer.parseInt(equation_list.get(x - 1));
+                    int b = Integer.parseInt(equation_list.get(x + 1));
                     int c = Basic_Math_Functions.basic_int_division(a, b);
 
                     // answer c is found and can be added to the list, this can be done by removing the current operator
                     // and the two digits on either side of it, shortening the list.
 
                     // replacing the operator with the answer
-                    equation_list.set(i, String.valueOf(c));
+                    equation_list.set(x, String.valueOf(c));
 
                     // now removing the digits on either side of that "operator" now answer digit
-                    equation_list.remove(i - 1);
+                    equation_list.remove(x - 1);
                     //removed position before i, therefore list is now 1 position smaller
-                    equation_list.remove(i);
+                    equation_list.remove(x);
 
                     //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
                     // list correctly with no blank positions or reset positions that duplicate.
-                    i = 0;
-                } else if (Objects.equals(equation_list.get(i), "*")) {
+                    x = 0;
+                }
+            }
+        }
+        return equation_list;
+    }
+
+    private List<String> calc_multiplication(List<String> equation_list) {
+        for (int x = 0; x <= equation_list.size() - 1; x++) {
+            try {
+                // tries to convert item in position "i" to an integer,
+                // if it cannot then it must be an operator, as such
+                // the catch it caught and pushed through to the needed code to complete the maths equation
+                Integer.parseInt(equation_list.get(1));
+
+                // if current item in list position can be converted to a digit, nothing is really needed to happen, as
+                // such rest of code happens in catch.
+                // it is probably better to ensure all code happens in the try, rather than the catch, however -
+                // im working getting it to work before fixing syntax and "perfect" coding currently.
+
+                // could cal on system garbage collector to clean up on digit be referencing it as null, but no point as
+                // it is already well optimised and will probably catch it later on anyway
+            } catch (NumberFormatException ex) {
+                // if the item in position "i" is found to not be a digit when made into an integer, then it must be an
+                // operator.
+                // if it is an operator then we can take the digits from either side of it and use the operator to do
+                // what math needs to be done on it then
+                if (Objects.equals(equation_list.get(x), "*")) {
+                    // If there is this, we need to ensure this is done before anything else,
+                    // even moving from left ot right.
+                    // if brackets include this and extra than this needs to be done first.
+                    // while looping through the list it goes left to right, so if an indices is here, it won't be don't
+                    // till other calculations are done before from left to right.
+                    // Could loop through the given equation till it is found, while using the is_indices boolean check
+                    // to activate the code, else it would be inefficient to constantly loop back through it
+                    // every time this method as called.
+
                     // add the digits from either side of the equations list together.
-                    int a = Integer.parseInt(equation_list.get(i - 1));
-                    int b = Integer.parseInt(equation_list.get(i + 1));
+                    int a = Integer.parseInt(equation_list.get(x - 1));
+                    int b = Integer.parseInt(equation_list.get(x + 1));
                     int c = Basic_Math_Functions.basic_int_multiplication(a, b);
 
                     // answer c is found and can be added to the list, this can be done by removing the current operator
                     // and the two digits on either side of it, shortening the list.
 
                     // replacing the operator with the answer
-                    equation_list.set(i, String.valueOf(c));
+                    equation_list.set(x, String.valueOf(c));
 
                     // now removing the digits on either side of that "operator" now answer digit
-                    equation_list.remove(i - 1);
+                    equation_list.remove(x - 1);
                     //removed position before i, therefore list is now 1 position smaller
-                    equation_list.remove(i);
+                    equation_list.remove(x);
 
                     //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
                     // list correctly with no blank positions or reset positions that duplicate.
-                    i = 0;
-                } else if (Objects.equals(equation_list.get(i), "+")) {
+                    x = 0;
+                }
+            }
+        }
+        return equation_list;
+    }
+
+    private List<String> calc_addition(List<String> equation_list) {
+        for (int x = 0; x <= equation_list.size() - 1; x++) {
+            try {
+                // tries to convert item in position "i" to an integer,
+                // if it cannot then it must be an operator, as such
+                // the catch it caught and pushed through to the needed code to complete the maths equation
+                Integer.parseInt(equation_list.get(1));
+
+                // if current item in list position can be converted to a digit, nothing is really needed to happen, as
+                // such rest of code happens in catch.
+                // it is probably better to ensure all code happens in the try, rather than the catch, however -
+                // im working getting it to work before fixing syntax and "perfect" coding currently.
+
+                // could cal on system garbage collector to clean up on digit be referencing it as null, but no point as
+                // it is already well optimised and will probably catch it later on anyway
+            } catch (NumberFormatException ex) {
+                // if the item in position "i" is found to not be a digit when made into an integer, then it must be an
+                // operator.
+                // if it is an operator then we can take the digits from either side of it and use the operator to do
+                // what math needs to be done on it then
+                if (Objects.equals(equation_list.get(x), "+")) {
+                    // If there is this, we need to ensure this is done before anything else,
+                    // even moving from left ot right.
+                    // if brackets include this and extra than this needs to be done first.
+                    // while looping through the list it goes left to right, so if an indices is here, it won't be don't
+                    // till other calculations are done before from left to right.
+                    // Could loop through the given equation till it is found, while using the is_indices boolean check
+                    // to activate the code, else it would be inefficient to constantly loop back through it
+                    // every time this method as called.
+
                     // add the digits from either side of the equations list together.
-                    int a = Integer.parseInt(equation_list.get(i - 1));
-                    int b = Integer.parseInt(equation_list.get(i + 1));
+                    int a = Integer.parseInt(equation_list.get(x - 1));
+                    int b = Integer.parseInt(equation_list.get(x + 1));
                     int c = Basic_Math_Functions.basic_int_addition(a, b);
 
                     // answer c is found and can be added to the list, this can be done by removing the current operator
                     // and the two digits on either side of it, shortening the list.
 
                     // replacing the operator with the answer
-                    equation_list.set(i, String.valueOf(c));
+                    equation_list.set(x, String.valueOf(c));
 
                     // now removing the digits on either side of that "operator" now answer digit
-                    equation_list.remove(i - 1);
+                    equation_list.remove(x - 1);
                     //removed position before i, therefore list is now 1 position smaller
-                    equation_list.remove(i);
+                    equation_list.remove(x);
 
                     //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
                     // list correctly with no blank positions or reset positions that duplicate.
-                    i = 0;
-                } else if (Objects.equals(equation_list.get(i), "-")) {
+                    x = 0;
+                }
+            }
+        }
+        return equation_list;
+    }
+
+    private List<String> calc_subtraction(List<String> equation_list) {
+        for (int x = 0; x <= equation_list.size() - 1; x++) {
+            try {
+                // tries to convert item in position "i" to an integer,
+                // if it cannot then it must be an operator, as such
+                // the catch it caught and pushed through to the needed code to complete the maths equation
+                Integer.parseInt(equation_list.get(1));
+
+                // if current item in list position can be converted to a digit, nothing is really needed to happen, as
+                // such rest of code happens in catch.
+                // it is probably better to ensure all code happens in the try, rather than the catch, however -
+                // im working getting it to work before fixing syntax and "perfect" coding currently.
+
+                // could cal on system garbage collector to clean up on digit be referencing it as null, but no point as
+                // it is already well optimised and will probably catch it later on anyway
+            } catch (NumberFormatException ex) {
+                // if the item in position "i" is found to not be a digit when made into an integer, then it must be an
+                // operator.
+                // if it is an operator then we can take the digits from either side of it and use the operator to do
+                // what math needs to be done on it then
+                if (Objects.equals(equation_list.get(x), "-")) {
+                    // If there is this, we need to ensure this is done before anything else,
+                    // even moving from left ot right.
+                    // if brackets include this and extra than this needs to be done first.
+                    // while looping through the list it goes left to right, so if an indices is here, it won't be don't
+                    // till other calculations are done before from left to right.
+                    // Could loop through the given equation till it is found, while using the is_indices boolean check
+                    // to activate the code, else it would be inefficient to constantly loop back through it
+                    // every time this method as called.
+
                     // add the digits from either side of the equations list together.
-                    int a = Integer.parseInt(equation_list.get(i - 1));
-                    int b = Integer.parseInt(equation_list.get(i + 1));
+                    int a = Integer.parseInt(equation_list.get(x - 1));
+                    int b = Integer.parseInt(equation_list.get(x + 1));
                     int c = Basic_Math_Functions.basic_int_subtraction(a, b);
 
                     // answer c is found and can be added to the list, this can be done by removing the current operator
                     // and the two digits on either side of it, shortening the list.
 
                     // replacing the operator with the answer
-                    equation_list.set(i, String.valueOf(c));
+                    equation_list.set(x, String.valueOf(c));
 
                     // now removing the digits on either side of that "operator" now answer digit
-                    equation_list.remove(i - 1);
+                    equation_list.remove(x - 1);
                     //removed position before i, therefore list is now 1 position smaller
-                    equation_list.remove(i);
+                    equation_list.remove(x);
 
                     //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
                     // list correctly with no blank positions or reset positions that duplicate.
-                    i = 0;
+                    x = 0;
                 }
             }
-            System.out.println(equation_list + " Loop: #" + loop_tracker);
         }
         return equation_list;
     }
 
+
+
+    /*
+            LOGIC FOR BRACKETS
+
+                Below.
+     */
+
+    private static int getBracket_counter(String input_equation) {
+        int bracket_counter = 0;
+        for (int i = 0; i <= input_equation.length() - 1; i++) {
+            //if there are brackets, count for even number of them to check correct amount.
+            //this does not however check to see if there are correct type of each when divided by 2
+            //this only shows there's enough in the system.
+            // however this is pretty pointless anyway atm as this program cannot use brackets yet.
+            if (String.valueOf(input_equation.charAt(i)).equals("(")
+                    || String.valueOf(input_equation.charAt(i)).equals(")"))
+                bracket_counter++;
+        }
+        return bracket_counter;
+    }
 
     private void compute_bracket_equation(String input_equation,
                                           int open_brackets, int closed_brackets) {
@@ -326,8 +463,6 @@ public class Calc_Interface {
          else output answer
         */
 
-        System.out.println("Running Brackets checker/ calc");
-
         int found_open_brackets = 0;
         int found_closed_brackets = 0;
 
@@ -337,15 +472,12 @@ public class Calc_Interface {
             if (String.valueOf(input_equation.charAt(i)).equals("(")) {
                 // found open parenthesis.
                 // now need to find closed.
-                System.out.println("Open found 0");
-
                 // new loop from I, to end of parenthesis.
                 // if looping from same position an '(' is found, it will continue looping saying it has been found
                 // as such add 1 to position 'i'
                 for (int j = i+1; j < input_equation.length(); j++) {
                     // loops through both strings comparing each character @ i in the list together.
                     if (String.valueOf(input_equation.charAt(j)).equals("(")) {
-                        System.out.println("Open found 1");
                         // if another open parenthesis is found before the last is closed,
                         // then we need to compute the inside parenthesis.
                         j = input_equation.length() + 1;
@@ -356,8 +488,6 @@ public class Calc_Interface {
 
                         // if open and close brackets are found then compute them.
                         // we need to loop from the 'i' to the 'j' appending what is inside the () to a new string
-                        System.out.println("closed found 0");
-
                         // check to see if the brackets have anything inside of them
                         if (i-j >= 0){
                             // if difference between numbers within brackets is >0 as im taking away
@@ -366,25 +496,20 @@ public class Calc_Interface {
                             System.out.println("This Equation cannot be computed. 4");
                             // reset loop back to make another pass since the () have not been
                             // removed as nothing was in them
-                            System.out.println(input_equation);
                             i=input_equation.length();
                             j=input_equation.length();
                         } else{
                             // else there are numbers inside the brackets as such can compute.
                             StringBuilder bracket_equation = getStringBuilder(input_equation, i, j);
-                            System.out.println(bracket_equation + "Bracket Equation");
                             List<String> return_list = compute_equation(bracket_equation.toString());
                             // once answer given back, we can remove the brackets.
                             return_list.removeLast();
                             return_list.removeFirst();
-                            System.out.println(return_list + "Return List");
                             // as we only passed the () equation it is safe to remove first and last position of the list.
                             // we can now convert to a string again, and pass back into the position we took it out of.
                             // then we need to restart the loop to check for more ().
                             StringBuilder answer_string = getAnswer_string(return_list);
                             // now we have list converted to string, we can split the original equation.
-                            System.out.println(answer_string + "list converted to string");
-
 
                             // we know that the () start and end on 'i' and 'j', so we need to replace
                             // all string characters with "".
@@ -392,15 +517,14 @@ public class Calc_Interface {
                                     input_equation.substring(j+1);
 
                             //need to reset string
-                            System.out.println(input_equation + "input Equation");
                             //reset 'i' and 'j' back to 0 to go through the loop again, till there are no longer any ()
                             if (found_closed_brackets == closed_brackets && found_open_brackets == open_brackets){
-                                System.out.println("All brackets accounted for");
                                 // all brackets done, then if anything else not computed can be computed
                                 compute_equation(input_equation);
+
                             }
                             else {
-                                // if the bracket count isn't equal then there are more brackets in teh equation.
+                                // if the bracket count isn't equal then there are more brackets in the equation.
                                 i = 0;
                                 j = 0;
                             }
@@ -410,6 +534,12 @@ public class Calc_Interface {
             }
         }
     }
+
+    /*
+            LOGIC FOR STRING MANIPULATIONS
+
+                        Below.
+     */
 
     private static StringBuilder getStringBuilder(String input_equation, int i, int j) {
         StringBuilder bracket_equation = new StringBuilder();
@@ -431,6 +561,12 @@ public class Calc_Interface {
         return answer_string;
     }
 
+
+    /*
+                LOGIC FOR MOVING STRING TO LIST
+
+                            Below.
+     */
 
     private List<String> equation_sorting(String input_equation){
         // need to check to see if the inputted equation has the correct syntax, e.g, not end in a + or -,
@@ -465,12 +601,9 @@ public class Calc_Interface {
             }
         }
         // end of list has been achieved as such add any remain digits or operators.
-        System.out.println("End of string has been found");
         if (!current_number.isEmpty()) {
-            System.out.println("adding last number to list");
             equation_list.add(current_number.toString());
         }
-        System.out.println(equation_list);
         // at the end of this method there should just be a list with all digits and operators append to it in the
         // correct order as needed to complete basic maths
 
