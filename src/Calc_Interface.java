@@ -123,10 +123,8 @@ public class Calc_Interface {
 
 
         equation_list = calc_indices(equation_list);
-        equation_list = calc_division(equation_list);
-        equation_list = calc_multiplication(equation_list);
-        equation_list = calc_addition(equation_list);
-        equation_list = calc_subtraction(equation_list);
+        equation_list = calc_division_and_multiplication(equation_list);
+        equation_list = calc_addition_and_subtraction(equation_list);
         System.out.println(equation_list);
         return equation_list;
     }
@@ -196,7 +194,7 @@ public class Calc_Interface {
 
 
 
-    private List<String> calc_division(List<String> equation_list) {
+    private List<String> calc_division_and_multiplication(List<String> equation_list) {
         for (int x = 0; x <= equation_list.size() - 1; x++) {
             try {
                 // tries to convert item in position "i" to an integer,
@@ -245,33 +243,7 @@ public class Calc_Interface {
                     //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
                     // list correctly with no blank positions or reset positions that duplicate.
                     x = 0;
-                }
-            }
-        }
-        return equation_list;
-    }
-
-    private List<String> calc_multiplication(List<String> equation_list) {
-        for (int x = 0; x <= equation_list.size() - 1; x++) {
-            try {
-                // tries to convert item in position "i" to an integer,
-                // if it cannot then it must be an operator, as such
-                // the catch it caught and pushed through to the needed code to complete the maths equation
-                Integer.parseInt(equation_list.get(1));
-
-                // if current item in list position can be converted to a digit, nothing is really needed to happen, as
-                // such rest of code happens in catch.
-                // it is probably better to ensure all code happens in the try, rather than the catch, however -
-                // im working getting it to work before fixing syntax and "perfect" coding currently.
-
-                // could cal on system garbage collector to clean up on digit be referencing it as null, but no point as
-                // it is already well optimised and will probably catch it later on anyway
-            } catch (NumberFormatException ex) {
-                // if the item in position "i" is found to not be a digit when made into an integer, then it must be an
-                // operator.
-                // if it is an operator then we can take the digits from either side of it and use the operator to do
-                // what math needs to be done on it then
-                if (Objects.equals(equation_list.get(x), "*")) {
+                } else if (Objects.equals(equation_list.get(x), "*")) {
                     // If there is this, we need to ensure this is done before anything else,
                     // even moving from left ot right.
                     // if brackets include this and extra than this needs to be done first.
@@ -306,7 +278,7 @@ public class Calc_Interface {
         return equation_list;
     }
 
-    private List<String> calc_addition(List<String> equation_list) {
+    private List<String> calc_addition_and_subtraction(List<String> equation_list) {
         for (int x = 0; x <= equation_list.size() - 1; x++) {
             try {
                 // tries to convert item in position "i" to an integer,
@@ -355,33 +327,7 @@ public class Calc_Interface {
                     //reset "i" to 0 as we have edited the list and need to ensure that it goes back through the entire
                     // list correctly with no blank positions or reset positions that duplicate.
                     x = 0;
-                }
-            }
-        }
-        return equation_list;
-    }
-
-    private List<String> calc_subtraction(List<String> equation_list) {
-        for (int x = 0; x <= equation_list.size() - 1; x++) {
-            try {
-                // tries to convert item in position "i" to an integer,
-                // if it cannot then it must be an operator, as such
-                // the catch it caught and pushed through to the needed code to complete the maths equation
-                Integer.parseInt(equation_list.get(1));
-
-                // if current item in list position can be converted to a digit, nothing is really needed to happen, as
-                // such rest of code happens in catch.
-                // it is probably better to ensure all code happens in the try, rather than the catch, however -
-                // im working getting it to work before fixing syntax and "perfect" coding currently.
-
-                // could cal on system garbage collector to clean up on digit be referencing it as null, but no point as
-                // it is already well optimised and will probably catch it later on anyway
-            } catch (NumberFormatException ex) {
-                // if the item in position "i" is found to not be a digit when made into an integer, then it must be an
-                // operator.
-                // if it is an operator then we can take the digits from either side of it and use the operator to do
-                // what math needs to be done on it then
-                if (Objects.equals(equation_list.get(x), "-")) {
+                } else if (Objects.equals(equation_list.get(x), "-")) {
                     // If there is this, we need to ensure this is done before anything else,
                     // even moving from left ot right.
                     // if brackets include this and extra than this needs to be done first.
